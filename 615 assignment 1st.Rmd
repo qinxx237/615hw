@@ -1,0 +1,41 @@
+---
+title: "615 assignment"
+author: "Hao Qin"
+date: "9/15/2018"
+output: pdf_document
+---
+A sloppy printer produces books with an average of 2 misprints per page. You want to know how many pages have more than k misprints in a book of n pages. Make an n x k table that shows the relationship between the total number of pages in a book and the number of pages with k misprints.
+Show and explain your work. Include equations and calculations to teach the reader how to solve the problem. Include an image of a book.
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+## For this problem, n=50, so we set the sequence from 5 to 50 by 5and I set K from 0 to 5.
+From this problem requirement, we can get that this problem 
+follow the Possion distribution. Possion(lamda), and the 
+lamda=2, 
+$$P\left( x \right) = \frac{{e^{ - \lambda } \lambda ^x }}{{x!}}$$
+```{r}
+page_N=seq(5,50,5)
+misK=c(0,1,2,3,4,5)
+prob_mis=ppois(q = misK, lambda = 2, lower.tail = F)
+prob_mis
+```
+
+##when I figure out the Possion distribution, next I will use the binomial distribution
+$$P(A) = \sum P(\{ (e_1,...,e_N) \})  =  {N}\choose{k} \cdot p^kq^{N-k}$$
+```{r}
+prob_page=pbinom(q = page_N, size = 50, prob = prob_mis, lower.tail = T)
+prob_page
+Table=data.frame(matrix(ncol=6, nrow =10, dimname = list(c("page5","page10","page15","page20",                                         "page25","page30","page35","page40","page45",
+"page50"), c("misprint0","misprint1","misprint2",
+"misprint3","misprint4","misprint5"))))
+for(i in 1:10){
+   Table[i, ]=pbinom(5*i, 50, prob=prob_mis, lower.tail = F)
+}
+kable(Table)
+```
+
+![https://goo.gl/images/aMc1H4](C:/Users/Hao/Desktop/book.png)
